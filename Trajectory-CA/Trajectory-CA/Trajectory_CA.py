@@ -12,15 +12,13 @@ def trajectory(v,k,m,theta,deltaT):
     x = 0
     theta1 = theta/100
     theta1 = theta1*M.pi/180
-    y = 10
+    y = 6
     time = 0
     while y > 0:
-        #plt.scatter(x,y,s = 0.1,c = 'black')
         vx = v*M.cos(theta1)
         vy = v*M.sin(theta1)
         x += vx*deltaT
         y += vy*deltaT
-        #F = k*(v**2)
         F = k*(v**3)
         a = F/m
         ax = a*M.cos(theta1)
@@ -28,24 +26,22 @@ def trajectory(v,k,m,theta,deltaT):
         vx -= ax*deltaT
         vy -= ay*deltaT
         v = M.sqrt(vx**2 + vy**2)
-        #k = v/v0*k0
         theta1 = M.atan(vy/vx)
         time += deltaT
-        #print(v,vx,vy,F,a,ax,ay,theta*180/M.pi)
     with open('C:/Users/von SolIII/Desktop/1.txt','a') as f:
-        f.write(str(theta/100)+','+str(v)+','+str(x)+','+str(theta1*180/M.pi)+','+str(time/3)+'\n')
-    #print(v,x,theta*180/M.pi,time/3)
-    #plt.axis('equal')
-    #plt.show()
+        f.write(str(theta/100)+','+str(v)+','+str(x)+','+str(-theta1*180/M.pi)+','+str(time/3)+'\n')
+
+
 
 def trajectory1(v,k,m,theta,deltaT):
+    font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=15)
     v0 = v
     #k0 = k
     g = 9.8
     x = 0
     theta1 = theta/100
     theta1 = theta1*M.pi/180
-    y = 10
+    y = 6
     time = 0
     while y > 0:
         plt.scatter(x,y,s = 0.1,c = 'black')
@@ -53,7 +49,6 @@ def trajectory1(v,k,m,theta,deltaT):
         vy = v*M.sin(theta1)
         x += vx*deltaT
         y += vy*deltaT
-        #F = k*(v**2)
         F = k*(v**3)
         a = F/m
         ax = a*M.cos(theta1)
@@ -61,13 +56,11 @@ def trajectory1(v,k,m,theta,deltaT):
         vx -= ax*deltaT
         vy -= ay*deltaT
         v = M.sqrt(vx**2 + vy**2)
-        #k = v/v0*k0
         theta1 = M.atan(vy/vx)
         time += deltaT
-        #print(y,v,vx,vy,F,a,ax,ay,theta*180/M.pi,k)
-        #print(k)
-    #print(theta/100,v,x,theta1*180/M.pi,time/3)
     plt.axis('equal')
+    plt.grid()
+    plt.title('最远射程弹道',fontproperties=font)
     plt.show()
 
 def trajectory2(v,k,m,theta,deltaT):
@@ -77,15 +70,13 @@ def trajectory2(v,k,m,theta,deltaT):
     x = 0
     theta1 = theta/100
     theta1 = theta1*M.pi/180
-    y = 10
+    y = 6
     time = 0
     while y > 0:
-        #plt.scatter(x,y,s = 0.1,c = 'black')
         vx = v*M.cos(theta1)
         vy = v*M.sin(theta1)
         x += vx*deltaT
         y += vy*deltaT
-        #F = k*(v**2)
         F = k*(v**3)
         a = F/m
         ax = a*M.cos(theta1)
@@ -93,19 +84,65 @@ def trajectory2(v,k,m,theta,deltaT):
         vx -= ax*deltaT
         vy -= ay*deltaT
         v = M.sqrt(vx**2 + vy**2)
-        #k = v/v0*k0
         theta1 = M.atan(vy/vx)
         time += deltaT
-        #print(y,v,vx,vy,F,a,ax,ay,theta*180/M.pi,k)
-        #print(k)
     print(theta/100,v,x,theta1*180/M.pi,time/3)
-    #plt.axis('equal')
-    #plt.show()
+
+def draw():
+    font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=15)
+    plt.figure(figsize = (12,8))
+    figure1 = plt.subplot(2,2,1)
+    figure2 = plt.subplot(2,2,2)
+    figure3 = plt.subplot(2,2,3)
+    figure4 = plt.subplot(2,2,4)
+    figure1.set_title('射程(m)-炮射角(°)',fontproperties=font)
+    figure2.set_title('射程(m)-末端弹速(m/s)',fontproperties=font)
+    figure3.set_title('射程(m)-攻角(°)',fontproperties=font)
+    figure4.set_title('射程(m)-时间(s)',fontproperties=font)
+    f = open('C:/Users/von SolIII/Desktop/1.txt')
+    for line in f.readlines():
+        try:
+            line = line.split(',')
+            figure1.scatter(eval(line[2]),eval(line[0]),s = 10, c = 'black')
+            figure2.scatter(eval(line[2]),eval(line[1]),s = 10, c = 'black')
+            figure3.scatter(eval(line[2]),eval(line[3]),s = 10, c = 'black')
+            figure4.scatter(eval(line[2]),eval(line[4]),s = 10, c = 'black')
+        except:
+            continue
+    figure1.grid()
+    figure2.grid()
+    figure3.grid()
+    figure4.grid()
+    plt.show()
+
+def DMtra(theta):
+    trajectory(762,2.31e-5,152,theta,0.01)
+
+def BLtra(theta):
+    trajectory(762,2.12e-5,152,theta,0.01)
+
+def NOtra(theta):
+    trajectory(853,1.48e-5,118,theta,0.01)
+
+def PStra(theta):
+    trajectory(853,1.53e-5,118,theta,0.01)
+
+def IBKtra(theta):
+    trajectory(920,8.10e-6,126,theta,0.01)
+
+def IBK1tra(theta):
+    trajectory(840,9.15e-6,126,theta,0.01)
+
+
 
 
 if __name__ == '__main__':
     #trajectory(762,5e-5,59,40,0.1)
-    #trajectory1(701,9.54e-5,1225,3982,0.05)
+    trajectory1(840,9.15e-6,126,1442,0.05)
+    
+    with Pool() as pool:
+        pool.map(IBK1tra,range(1443))
+    draw()
     
     '''
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=15)
