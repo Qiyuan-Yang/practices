@@ -133,15 +133,18 @@ def IBKtra(theta):
 def IBK1tra(theta):
     trajectory(840,9.15e-6,126,theta,0.01)
 
+def TKtra(theta):
+    trajectory(840,11.15e-6,126,theta,0.01)
+
 
 
 
 if __name__ == '__main__':
     #trajectory(762,5e-5,59,40,0.1)
-    trajectory1(840,9.15e-6,126,1442,0.05)
+    trajectory1(840,11.15e-6,126,1352,0.05)
     
     with Pool() as pool:
-        pool.map(IBK1tra,range(1443))
+        pool.map(TKtra,range(1353))
     draw()
     
     '''
