@@ -5,35 +5,35 @@ from multiprocessing import Pool
 from matplotlib.font_manager import FontProperties
 
 
-def trajectory(v,k,m,theta,deltaT):
+def trajectory(v,k,m,theta,deltaT,mode,xz):
     v0 = v
     #k0 = k
     g = 9.8
     x = 0
     theta1 = theta/100
     theta1 = theta1*M.pi/180
-    y = 6
+    y = 4
     time = 0
     while y > 0:
         vx = v*M.cos(theta1)
         vy = v*M.sin(theta1)
         x += vx*deltaT
         y += vy*deltaT
-        F = k*(v**3)
+        F = k*(v**mode)
         a = F/m
-        ax = a*M.cos(theta1)
+        ax = a*M.cos(theta1)+xz*x**3
         ay = a*M.sin(theta1)+g
         vx -= ax*deltaT
         vy -= ay*deltaT
         v = M.sqrt(vx**2 + vy**2)
         theta1 = M.atan(vy/vx)
         time += deltaT
-    with open('C:/Users/von SolIII/Desktop/1.txt','a') as f:
+    with open('C:/Users/von SolIII/Desktop/3.txt','a') as f:
         f.write(str(theta/100)+','+str(v)+','+str(x)+','+str(-theta1*180/M.pi)+','+str(time/3)+'\n')
 
 
 
-def trajectory1(v,k,m,theta,deltaT):
+def trajectory1(v,k,m,theta,deltaT,mode,xz):
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=15)
     v0 = v
     #k0 = k
@@ -41,7 +41,7 @@ def trajectory1(v,k,m,theta,deltaT):
     x = 0
     theta1 = theta/100
     theta1 = theta1*M.pi/180
-    y = 6
+    y = 4
     time = 0
     while y > 0:
         plt.scatter(x,y,s = 0.1,c = 'black')
@@ -49,9 +49,9 @@ def trajectory1(v,k,m,theta,deltaT):
         vy = v*M.sin(theta1)
         x += vx*deltaT
         y += vy*deltaT
-        F = k*(v**3)
+        F = k*(v**mode)
         a = F/m
-        ax = a*M.cos(theta1)
+        ax = a*M.cos(theta1)+xz*x**3
         ay = a*M.sin(theta1)+g
         vx -= ax*deltaT
         vy -= ay*deltaT
@@ -63,23 +63,23 @@ def trajectory1(v,k,m,theta,deltaT):
     plt.title('最远射程弹道',fontproperties=font)
     plt.show()
 
-def trajectory2(v,k,m,theta,deltaT):
+def trajectory2(v,k,m,theta,deltaT,mode,xz):
     v0 = v
     #k0 = k
     g = 9.8
     x = 0
     theta1 = theta/100
     theta1 = theta1*M.pi/180
-    y = 6
+    y = 4
     time = 0
     while y > 0:
         vx = v*M.cos(theta1)
         vy = v*M.sin(theta1)
         x += vx*deltaT
         y += vy*deltaT
-        F = k*(v**3)
+        F = k*(v**mode)
         a = F/m
-        ax = a*M.cos(theta1)
+        ax = a*M.cos(theta1)+xz*x**3
         ay = a*M.sin(theta1)+g
         vx -= ax*deltaT
         vy -= ay*deltaT
@@ -99,7 +99,7 @@ def draw():
     figure2.set_title('射程(m)-末端弹速(m/s)',fontproperties=font)
     figure3.set_title('射程(m)-攻角(°)',fontproperties=font)
     figure4.set_title('射程(m)-时间(s)',fontproperties=font)
-    f = open('C:/Users/von SolIII/Desktop/1.txt')
+    f = open('C:/Users/von SolIII/Desktop/3.txt')
     for line in f.readlines():
         try:
             line = line.split(',')
@@ -115,39 +115,26 @@ def draw():
     figure4.grid()
     plt.show()
 
-def DMtra(theta):
-    trajectory(762,2.31e-5,152,theta,0.01)
-
-def BLtra(theta):
-    trajectory(762,2.12e-5,152,theta,0.01)
-
-def NOtra(theta):
-    trajectory(853,1.48e-5,118,theta,0.01)
-
-def PStra(theta):
-    trajectory(853,1.53e-5,118,theta,0.01)
-
-def IBKtra(theta):
-    trajectory(920,8.10e-6,126,theta,0.01)
-
-def IBK1tra(theta):
-    trajectory(840,9.15e-6,126,theta,0.01)
-
-def TKtra(theta):
-    trajectory(840,11.15e-6,126,theta,0.01)
-
-def MKtra(theta):
-    trajectory(840,11.61e-6,126,theta,0.01)
-
+def AZtra(theta):
+    trajectory(1000,1.453e-8,13,theta,0.01,3.7)
+    
+def Pr47tra(theta):
+    trajectory(950,3.768e-8,33,theta,0.01,3.7)
+    
+def BStra(theta):
+    trajectory(792,3.921e-6,25,theta,0.01,3,1.35e-11)
+    
+def LFtra(theta):
+    trajectory(792,3.471e-6,25,theta,0.01,3,0)
 
 
 
 if __name__ == '__main__':
     #trajectory(762,5e-5,59,40,0.1)
-    trajectory1(840,11.61e-6,126,1300,0.05)
-
+    #trajectory1(792,3.471e-6,25,1129,0.05,3,0,0)
+    
     with Pool() as pool:
-        pool.map(MKtra,range(1301))
+        pool.map(LFtra,range(1130))
     draw()
     
     '''
@@ -172,38 +159,5 @@ if __name__ == '__main__':
     plt.ylabel('初速',fontproperties=font)
     plt.show()
 
-    with Pool() as pool:
-        pool.map(MStra,range(4000))
-    with Pool() as pool:
-        pool.map(BSMtra,range(2410))
-    with Pool() as pool:
-        pool.map(H39tra,range(2610))
-    with Pool() as pool:
-        pool.map(H422tra,range(2620))
-    with Pool() as pool:
-        pool.map(H42tra,range(2700))
-    with Pool() as pool:
-        pool.map(NStra,range(2500))
-    with Pool() as pool:
-        pool.map(KGVtra,range(3100))
-    with Pool() as pool:
-        pool.map(Ltra,range(3600))
-    with Pool() as pool:
-        pool.map(L3APtra,range(3400))
-    with Pool() as pool:
-        pool.map(MTNtra,range(3700))
-    with Pool() as pool:
-        pool.map(IWtra,range(3250))
-    with Pool() as pool:
-        pool.map(MStra,range(4500))
-    with Pool() as pool:
-        pool.map(SYtra,range(3000))
-    with Pool() as pool:
-        pool.map(YMTtra,range(2900))
-    with Pool() as pool:
-        pool.map(FStra,range(3000))
-    with Pool() as pool:
-        pool.map(NGTtra,range(2500))
-    with Pool() as pool:
-        pool.map(AMGtra,range(4000))
     '''
+
